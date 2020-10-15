@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  gateway:
+    build:
+        context: ..
+        dockerfile: ./DockerfileGatewayAPI
+    restart: always 
+    ports:
+    - "5000:80"
+  emailservice:
+    build:
+        context: ..
+        dockerfile: ./DockerfileEmail
+    restart: always 
+    environment:
+    - Sender:test@wp.pl

@@ -1,0 +1,9 @@
+E:\Projects\EmailService\Domain\bin\Debug\netstandard2.0\EmailService.Domain.deps.json
+E:\Projects\EmailService\Domain\bin\Debug\netstandard2.0\EmailService.Domain.dll
+E:\Projects\EmailService\Domain\bin\Debug\netstandard2.0\EmailService.Domain.pdb
+E:\Projects\EmailService\Domain\obj\Debug\netstandard2.0\EmailService.Domain.csprojAssemblyReference.cache
+E:\Projects\EmailService\Domain\obj\Debug\netstandard2.0\EmailService.Domain.csproj.CoreCompileInputs.cache
+E:\Projects\EmailService\Domain\obj\Debug\netstandard2.0\EmailService.Domain.AssemblyInfoInputs.cache
+E:\Projects\EmailService\Domain\obj\Debug\netstandard2.0\EmailService.Domain.AssemblyInfo.cs
+E:\Projects\EmailService\Domain\obj\Debug\netstandard2.0\EmailService.Domain.dll
+E:\Projects\EmailService\Domain\obj\Debug\netstandard2.0\EmailService.Domain.pdb
