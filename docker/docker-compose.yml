@@ -3,14 +3,97 @@ services:
   gateway:
     build:
         context: ..
-        dockerfile: ./DockerfileGatewayAPI
-    restart: always 
-    ports:
-    - "5000:80"
-  emailservice:
-    build:
-        context: ..
-        dockerfile: ./DockerfileEmail
+        dockerfile: ./DockerfileGateway
     restart: always 
     environment:
-    - Sender:test@wp.pl
+    - RabbitMq:Host=amqp://rabbitmq
+    - SqlServer:ConnectionString=Server=192.168.1.108,1433;Database=CoreSystem;MultipleActiveResultSets=true;User ID=bakub;Password=jestembogiem1
+    - PostgreSQL:ConnectionString=Host=postgres;Database=CoreSystem;Username=postgres;Password=postgres;Port=5432
+    ports:
+    - "5000:80"
+    depends_on:
+    - rabbitmq
+    - postgres
+  notificationservice:
+    build:
+        context: ..
+        dockerfile: ./DockerfileNotification
+    restart: always 
+    environment:
+    - RabbitMq:Host=amqp://rabbitmq
+    - RabbitMq:Username=coresystem
+    - RabbitMq:Password=coresystem
+    - SqlServer:ConnectionString=Server=192.168.1.108,1433;Database=CoreSystem;MultipleActiveResultSets=true;User ID=bakub;Password=jestembogiem1
+    #ports:
+    #- "5005:80"
+    depends_on:
+    - rabbitmq
+    - postgres
+    #depends_on:
+    #- sql-server-db
+  userservice:
+    build:
+        context: ..
+        dockerfile: ./DockerfileUser
+    restart: always 
+    environment:
+    - RabbitMq:Host=amqp://rabbitmq
+    - RabbitMq:Username=coresystem
+    - RabbitMq:Password=coresystem
+    - PostgreSQL:ConnectionString=Host=postgres;Database=CoreSystem;Username=postgres;Password=postgres;Port=5432
+    #ports:
+    #- "5006:80"
+    depends_on:
+    - rabbitmq
+    - postgres
+  validationservice:
+    build:
+        context: ..
+        dockerfile: ./DockerfileValidation
+    restart: always 
+    environment:
+    - RabbitMq:Host=amqp://rabbitmq
+    - RabbitMq:Username=coresystem
+    - RabbitMq:Password=coresystem
+    #ports:
+    #- "5009:80"
+    depends_on:
+    - rabbitmq
+  rabbitmq:
+    image: "rabbitmq:3.8.3-management-alpine"
+    restart: always 
+    privileged: true
+    environment:
+     - RABBITMQ_DEFAULT_USER:guest
+     - RABBITMQ_DEFAULT_PASS:guest
+    #networks:
+    # - core_system
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    ports:
+     - 15672:15672
+  #sql-server-db:
+  #  image: mcr.microsoft.com/mssql/server:2019-latest
+  #  ports:
+  #    - "1433:1433"
+  #  environment:
+  #    SA_PASSWORD: "sa_password"
+  #    ACCEPT_EULA: "Y"
+  postgres:
+    image: "postgres:12-alpine"
+    restart: always 
+    environment:
+       POSTGRES_HOST: postgres
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: postgres
+    ports:
+     - 5437:5432
+    volumes:
+     - pgdata:/var/lib/postgresql/data
+    #networks:
+    # - Core_system
+volumes: 
+  pgdata:
